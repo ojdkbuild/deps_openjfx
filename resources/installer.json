@@ -1,0 +1,19 @@
+{
+  "appName": "${${PROJECT_NAME}_INSTALLER_APP_NAME}",
+  "versionMajor": "1",
+  "versionMinor": "${openjdk_MAJOR_VERSION}",
+  "versionMicro": "${${PROJECT_NAME}_UPDATE}${openjdk_RPMBUILD}",
+  "versionPatch": "${${PROJECT_NAME}_BUILD}",
+  "vendor": "${openjdk_INSTALLER_VENDOR}",
+  "installDirName": "java-1.${openjdk_INSTALLER_JDK_RELEASE}.0-openjdk-1.${openjdk_INSTALLER_JDK_RELEASE}.0.${openjdk_UPDATE}-${openjdk_RPMBUILD}",
+  "helpLink": "${openjdk_INSTALLER_HELP_LINK}",
+  "productUuid": "${${PROJECT_NAME}_INSTALLER_PRODUCT_UUID}",
+  "updateUuid": "${${PROJECT_NAME}_INSTALLER_UPDATE_UUID}",
+  "vendorDirName": "${openjdk_INSTALLER_VENDOR_DIRNAME}",
+  "licenseFilePath": "${openjdk_INSTALLER_RESOURCES_PATH}/LICENSE.rtf",
+  "iconPath": "${openjdk_INSTALLER_RESOURCES_PATH}/icon.ico",
+  "topBannerBmpPath": "${openjdk_INSTALLER_RESOURCES_PATH}/top_banner.bmp",
+  "greetingsBannerBmpPath": "${openjdk_INSTALLER_RESOURCES_PATH}/greetings_banner.bmp",
+  "useFeatureTree": false
+}
+
