@@ -25,7 +25,7 @@ set BASECLASSES_SDK_DIR=%WINDOWSSDKDIR%
 set MSVCR100_DIR=${OJDKBUILD_DIR}/tools/toolchain/msvcr100/${openjdk_MSVCR_PATH}
 
 rem freshly-built jdk
-set JAVA_HOME=${CMAKE_CURRENT_BINARY_DIR}/../${openjdk_IMAGE}
+set JAVA_HOME=${${PROJECT_NAME}_OJFX_JAVA_HOME}
 
 rem build
 rd /s /q .gradle
