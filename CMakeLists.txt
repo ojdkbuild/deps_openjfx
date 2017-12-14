@@ -22,6 +22,7 @@ set ( ${PROJECT_NAME}_UPDATE "152" CACHE STRING "Version string 'update' field" 
 set ( ${PROJECT_NAME}_BUILD "04" CACHE STRING "Version string 'build' field" )
 set ( ${PROJECT_NAME}_OJFX_COMPILE_MEDIA "true" CACHE STRING "Enable 'media' module for OpenJFX" )
 set ( ${PROJECT_NAME}_OJFX_JAVA_HOME ${CMAKE_CURRENT_BINARY_DIR}/../${openjdk_IMAGE} CACHE STRING "Path to jdk to use for building OpenJFX" )
+#set ( ${PROJECT_NAME}_OJFX_JAVA_HOME ${openjdk_TOOLS}/bootjdk8 CACHE STRING "Path to jdk to use for building OpenJFX" )
 set ( ${PROJECT_NAME}_INSTALLER_PRODUCT_UUID "0d8201c2-cde1-4c85-9fee-288a7f5fbce0" CACHE STRING "Installer product UUID" )
 set ( ${PROJECT_NAME}_INSTALLER_UPDATE_UUID "0cfe5d7f-c68c-45ab-ac7c-6286a1dcb6f4" CACHE STRING "Installer update UUID" )
 set ( ${PROJECT_NAME}_INSTALLER_APP_NAME "OpenJFX ${openjdk_MAJOR_VERSION}.0_${${PROJECT_NAME}_UPDATE}-${openjdk_RPMBUILD}-${openjdk_MILESTONE} (experimental)" CACHE STRING "Installer app name" )
@@ -32,23 +33,23 @@ set ( ${PROJECT_NAME}_IMAGE ${${PROJECT_NAME}_BASE}.${openjdk_ARCH} )
 
 # build config
 configure_file ( ${CMAKE_CURRENT_LIST_DIR}/resources/gradle.properties
-        ${OJDKBUILD_DIR}/lookaside/openjfx )
+        ${OJDKBUILD_DIR}/upstream/openjfx-8u )
 configure_file ( ${CMAKE_CURRENT_LIST_DIR}/resources/build.properties
-        ${OJDKBUILD_DIR}/lookaside/openjfx )        
+        ${OJDKBUILD_DIR}/upstream/openjfx-8u )        
 configure_file ( ${CMAKE_CURRENT_LIST_DIR}/resources/run-gradle.bat
-        ${OJDKBUILD_DIR}/lookaside/openjfx )
+        ${OJDKBUILD_DIR}/upstream/openjfx-8u )
 configure_file ( ${CMAKE_CURRENT_LIST_DIR}/resources/installer.json
         ${CMAKE_CURRENT_BINARY_DIR} )        
 
 # targets        
 add_custom_target ( ${PROJECT_NAME}
         COMMAND cmd /c run-gradle.bat
-        WORKING_DIRECTORY ${OJDKBUILD_DIR}/lookaside/openjfx
+        WORKING_DIRECTORY ${OJDKBUILD_DIR}/upstream/openjfx-8u
         COMMENT "Building OpenJFX ..." )
         
 add_custom_target ( ${PROJECT_NAME}_image        
         COMMAND ${CMAKE_COMMAND} -E make_directory ${${PROJECT_NAME}_IMAGE}
-        COMMAND (robocopy ${OJDKBUILD_DIR}/lookaside/openjfx/build/bundles ${${PROJECT_NAME}_IMAGE} javafx-sdk-overlay.zip /mov ${openjdk_RBCFLAGS} ) ${openjdk_RBCPOSTFIX}
+        COMMAND (robocopy ${OJDKBUILD_DIR}/upstream/openjfx-8u/build/bundles ${${PROJECT_NAME}_IMAGE} javafx-sdk-overlay.zip /mov ${openjdk_RBCFLAGS} ) ${openjdk_RBCPOSTFIX}
         COMMAND pushd ${${PROJECT_NAME}_IMAGE} && ${openjdk_TOOLS}/zip/unzip.exe -q javafx-sdk-overlay.zip && popd
         COMMAND ${CMAKE_COMMAND} -E remove ${${PROJECT_NAME}_IMAGE}/javafx-sdk-overlay.zip
         COMMAND ${CMAKE_COMMAND} -E remove ${${PROJECT_NAME}_IMAGE}/jre/bin/msvcr100.dll
