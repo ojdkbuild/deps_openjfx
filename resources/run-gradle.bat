@@ -17,7 +17,7 @@ rem limitations under the License.
 @echo on
 
 rem env setup
-call "${OJDKBUILD_DIR}/resources/scripts/set-compile-env-vs15-x86_64.bat"
+call "${OJDKBUILD_DIR}/resources/scripts/set-compile-env-vs15-${${PROJECT_NAME}_TOOLCHAIN_ARCH}.bat"
 
 rem freshly-built jdk
 set JAVA_HOME=${${PROJECT_NAME}_OJFX_JAVA_HOME}
@@ -28,5 +28,6 @@ if exist ".gradle" exit /b 1
 rd /s /q "buildSrc/.gradle"
 if exist "buildSrc/.gradle" exit /b 1
 cmd /c gradle cleanAll --refresh-dependencies --recompile-scripts --info || exit /b 1
+cmd /c gradle assemble --refresh-dependencies --info || exit /b 1
 rem cmd /c gradle test -x :web:test -x :fxpackager:test --refresh-dependencies --info || exit /b 1
 cmd /c gradle zips -x :apps --refresh-dependencies --info || exit /b 1

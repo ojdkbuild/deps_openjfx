@@ -23,7 +23,6 @@ set ( ${PROJECT_NAME}_BUILD "16" CACHE STRING "Version string 'build' field" )
 set ( ${PROJECT_NAME}_OJFX_COMPILE_MEDIA "true" CACHE STRING "Enable 'media' module for OpenJFX" )
 set ( ${PROJECT_NAME}_OJFX_COMPILE_WEBKIT "true" CACHE STRING "Enable 'web' module for OpenJFX" )
 set ( ${PROJECT_NAME}_OJFX_JAVA_HOME ${CMAKE_CURRENT_BINARY_DIR}/../${openjdk_IMAGE} CACHE STRING "Path to jdk to use for building OpenJFX" )
-#set ( ${PROJECT_NAME}_OJFX_JAVA_HOME ${openjdk_TOOLS}/bootjdk8 CACHE STRING "Path to jdk to use for building OpenJFX" )
 set ( ${PROJECT_NAME}_INSTALLER_PRODUCT_UUID "0d8201c2-cde1-4c85-9fee-288a7f5fbce0" CACHE STRING "Installer product UUID" )
 set ( ${PROJECT_NAME}_INSTALLER_UPDATE_UUID "0cfe5d7f-c68c-45ab-ac7c-6286a1dcb6f4" CACHE STRING "Installer update UUID" )
 set ( ${PROJECT_NAME}_INSTALLER_APP_NAME "OpenJFX ${openjdk_MAJOR_VERSION}.0_${${PROJECT_NAME}_UPDATE}-${openjdk_RPMBUILD}-${openjdk_MILESTONE} (experimental)" CACHE STRING "Installer app name" )
@@ -32,15 +31,24 @@ set ( ${PROJECT_NAME}_INSTALLER_APP_NAME "OpenJFX ${openjdk_MAJOR_VERSION}.0_${$
 set ( ${PROJECT_NAME}_BASE openjfx-${openjdk_MAJOR_VERSION}.0.${${PROJECT_NAME}_UPDATE}-${openjdk_RPMBUILD}.b${${PROJECT_NAME}_BUILD}.${openjdk_MILESTONE}.windows )
 set ( ${PROJECT_NAME}_IMAGE ${${PROJECT_NAME}_BASE}.${openjdk_ARCH} )
 
+# redist path
+if ( openjdk_32_BIT )
+    set ( ${PROJECT_NAME}_TOOLCHAIN_ARCH "x86" CACHE INTERNAL "" )
+    set ( ${PROJECT_NAME}_REDIST_ARCH "x86" CACHE INTERNAL "" )
+else ( )
+    set ( ${PROJECT_NAME}_TOOLCHAIN_ARCH "x86_64" CACHE INTERNAL "" )
+    set ( ${PROJECT_NAME}_REDIST_ARCH "x64" CACHE INTERNAL "" )
+endif ( )
+
 # build config
 configure_file ( ${CMAKE_CURRENT_LIST_DIR}/resources/gradle.properties
         ${OJDKBUILD_DIR}/upstream/openjfx-8u )
 configure_file ( ${CMAKE_CURRENT_LIST_DIR}/resources/build.properties
-        ${OJDKBUILD_DIR}/upstream/openjfx-8u )        
+        ${OJDKBUILD_DIR}/upstream/openjfx-8u )
 configure_file ( ${CMAKE_CURRENT_LIST_DIR}/resources/run-gradle.bat
         ${OJDKBUILD_DIR}/upstream/openjfx-8u )
 configure_file ( ${CMAKE_CURRENT_LIST_DIR}/resources/installer.json
-        ${CMAKE_CURRENT_BINARY_DIR} )        
+        ${CMAKE_CURRENT_BINARY_DIR} )
 
 # targets        
 add_custom_target ( ${PROJECT_NAME}
@@ -48,14 +56,16 @@ add_custom_target ( ${PROJECT_NAME}
         WORKING_DIRECTORY ${OJDKBUILD_DIR}/upstream/openjfx-8u
         COMMENT "Building OpenJFX ..." )
         
-add_custom_target ( ${PROJECT_NAME}_image        
+add_custom_target ( ${PROJECT_NAME}_image
         COMMAND ${CMAKE_COMMAND} -E make_directory ${${PROJECT_NAME}_IMAGE}
         COMMAND (robocopy ${OJDKBUILD_DIR}/upstream/openjfx-8u/build/bundles ${${PROJECT_NAME}_IMAGE} javafx-sdk-overlay.zip /mov ${openjdk_RBCFLAGS} ) ${openjdk_RBCPOSTFIX}
         COMMAND pushd ${${PROJECT_NAME}_IMAGE} && ${openjdk_TOOLS}/zip/unzip.exe -q javafx-sdk-overlay.zip && popd
+        COMMAND (robocopy ${OJDKBUILD_DIR}/tools/toolchain/vs2017bt/VC/Redist/MSVC/14.12.25810/${${PROJECT_NAME}_REDIST_ARCH}/Microsoft.VC141.CRT
+                ${${PROJECT_NAME}_IMAGE}/jre/bin vcruntime140.dll msvcp140.dll ${openjdk_RBCFLAGS} ) ${openjdk_RBCPOSTFIX}
         COMMAND ${CMAKE_COMMAND} -E remove ${${PROJECT_NAME}_IMAGE}/javafx-sdk-overlay.zip
         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
         COMMENT "Creating OpenJFX image ..." )
-add_dependencies ( ${PROJECT_NAME}_image ${PROJECT_NAME} )         
+add_dependencies ( ${PROJECT_NAME}_image ${PROJECT_NAME} )
 
 add_custom_target ( ${PROJECT_NAME}_zip
         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
@@ -78,7 +88,7 @@ add_custom_target ( ${PROJECT_NAME}_installer
                 ${openjdk_INSTALLER_LINKER_OPTIONS}
                 ${${PROJECT_NAME}_IMAGE}.wixobj
         COMMAND (robocopy ${CMAKE_CURRENT_BINARY_DIR} ${openjdk_DEST_DIR} ${${PROJECT_NAME}_IMAGE}.msi /mov ${openjdk_RBCFLAGS} ) ${openjdk_RBCPOSTFIX}
-        WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}        
+        WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
         COMMENT "Creating OpenJFX MSI installer ..." )
-add_dependencies ( ${PROJECT_NAME}_installer ${PROJECT_NAME}_zip )      
+add_dependencies ( ${PROJECT_NAME}_installer ${PROJECT_NAME}_zip )
         
