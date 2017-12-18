@@ -61,7 +61,7 @@ add_custom_target ( ${PROJECT_NAME}_image
         COMMAND (robocopy ${OJDKBUILD_DIR}/upstream/openjfx-8u/build/bundles ${${PROJECT_NAME}_IMAGE} javafx-sdk-overlay.zip /mov ${openjdk_RBCFLAGS} ) ${openjdk_RBCPOSTFIX}
         COMMAND pushd ${${PROJECT_NAME}_IMAGE} && ${openjdk_TOOLS}/zip/unzip.exe -q javafx-sdk-overlay.zip && popd
         COMMAND (robocopy ${OJDKBUILD_DIR}/tools/toolchain/vs2017bt/VC/Redist/MSVC/14.12.25810/${${PROJECT_NAME}_REDIST_ARCH}/Microsoft.VC141.CRT
-                ${${PROJECT_NAME}_IMAGE}/jre/bin vcruntime140.dll msvcp140.dll ${openjdk_RBCFLAGS} ) ${openjdk_RBCPOSTFIX}
+                ${${PROJECT_NAME}_IMAGE}/jre/bin concrt140.dll msvcp140.dll vcruntime140.dll ${openjdk_RBCFLAGS} ) ${openjdk_RBCPOSTFIX}
         COMMAND ${CMAKE_COMMAND} -E remove ${${PROJECT_NAME}_IMAGE}/javafx-sdk-overlay.zip
         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
         COMMENT "Creating OpenJFX image ..." )
