@@ -25,8 +25,8 @@ set ( ${PROJECT_NAME}_OJFX_COMPILE_WEBKIT "true" CACHE STRING "Enable 'web' modu
 set ( ${PROJECT_NAME}_OJFX_JAVA_HOME ${CMAKE_CURRENT_BINARY_DIR}/../${openjdk_IMAGE} CACHE STRING "Path to jdk to use for building OpenJFX" )
 
 set ( ${PROJECT_NAME}_INSTALLER_FEATURE_LEVEL "2" CACHE STRING "MSI Feature 'Level' for 'openjfx' component" )
-set ( ${PROJECT_NAME}_INSTALLER_FEATURE_TITLE "OpenJFX Runtime (experimental)" CACHE STRING "MSI Feature title for 'openjfx' component" )
-set ( ${PROJECT_NAME}_INSTALLER_FEATURE_DESCRIPTION "OpenJFX and WebKit runtime files. This component is EXPERIMENTAL and is NOT SUPPORTED." CACHE STRING "MSI Feature description for 'openjfx' component" )
+set ( ${PROJECT_NAME}_INSTALLER_FEATURE_TITLE "OpenJFX Runtime" CACHE STRING "MSI Feature title for 'openjfx' component" )
+set ( ${PROJECT_NAME}_INSTALLER_FEATURE_DESCRIPTION "OpenJFX and WebKit runtime files." CACHE STRING "MSI Feature description for 'openjfx' component" )
 
 # image naming
 set ( ${PROJECT_NAME}_BASE openjfx-${openjdk_MAJOR_VERSION}.0.${${PROJECT_NAME}_UPDATE}-${openjdk_RPMBUILD}.b${${PROJECT_NAME}_BUILD}.${openjdk_MILESTONE}.windows )
@@ -50,7 +50,8 @@ configure_file ( ${CMAKE_CURRENT_LIST_DIR}/resources/run-gradle.bat
         ${OJDKBUILD_DIR}/upstream/openjfx-8u )
 
 # targets
-add_custom_target ( ${PROJECT_NAME}
+# todo: think about using add_custom_command here
+add_custom_target ( ${PROJECT_NAME}_build
         COMMAND cmd /c run-gradle.bat
         WORKING_DIRECTORY ${OJDKBUILD_DIR}/upstream/openjfx-8u
         COMMENT "Building OpenJFX ..." )
@@ -65,7 +66,7 @@ add_custom_target ( ${PROJECT_NAME}_image
         COMMAND ${CMAKE_COMMAND} -E remove ${${PROJECT_NAME}_IMAGE}/javafx-sdk-overlay.zip
         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
         COMMENT "Creating OpenJFX image, path: [${CMAKE_CURRENT_BINARY_DIR}/{${PROJECT_NAME}_IMAGE}] ..." )
-add_dependencies ( ${PROJECT_NAME}_image image ${PROJECT_NAME} )
+add_dependencies ( ${PROJECT_NAME}_image image ${PROJECT_NAME}_build )
 
 add_custom_target ( ${PROJECT_NAME}_zip
         COMMAND ${openjdk_TOOLS}/zip/zip.exe -qr${openjdk_COMPRESS_LEVEL} ${${PROJECT_NAME}_IMAGE}.zip ${${PROJECT_NAME}_IMAGE}
@@ -73,6 +74,9 @@ add_custom_target ( ${PROJECT_NAME}_zip
         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
         COMMENT "Creating OpenJFX ZIP bundle ..." )
 add_dependencies ( ${PROJECT_NAME}_zip ${PROJECT_NAME}_image )
+
+add_custom_target ( ${PROJECT_NAME} )
+add_dependencies ( ${PROJECT_NAME} ${PROJECT_NAME}_zip )
 
 # installer
 configure_file ( ${CMAKE_CURRENT_LIST_DIR}/resources/installer.xsl
