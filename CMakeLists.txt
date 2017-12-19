@@ -55,6 +55,7 @@ add_custom_target ( ${PROJECT_NAME}_build
         COMMAND cmd /c run-gradle.bat
         WORKING_DIRECTORY ${OJDKBUILD_DIR}/upstream/openjfx-8u
         COMMENT "Building OpenJFX ..." )
+add_dependencies ( ${PROJECT_NAME}_build image )        
 
 add_custom_target ( ${PROJECT_NAME}_image
         COMMAND if exist ${${PROJECT_NAME}_IMAGE} rd /s /q ${${PROJECT_NAME}_IMAGE}
@@ -66,7 +67,7 @@ add_custom_target ( ${PROJECT_NAME}_image
         COMMAND ${CMAKE_COMMAND} -E remove ${${PROJECT_NAME}_IMAGE}/javafx-sdk-overlay.zip
         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
         COMMENT "Creating OpenJFX image, path: [${CMAKE_CURRENT_BINARY_DIR}/{${PROJECT_NAME}_IMAGE}] ..." )
-add_dependencies ( ${PROJECT_NAME}_image image ${PROJECT_NAME}_build )
+add_dependencies ( ${PROJECT_NAME}_image ${PROJECT_NAME}_build )
 
 add_custom_target ( ${PROJECT_NAME}_zip
         COMMAND ${openjdk_TOOLS}/zip/zip.exe -qr${openjdk_COMPRESS_LEVEL} ${${PROJECT_NAME}_IMAGE}.zip ${${PROJECT_NAME}_IMAGE}
