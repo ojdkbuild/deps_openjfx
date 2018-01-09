@@ -21,7 +21,7 @@
         </xsl:copy>
     </xsl:template>
     <xsl:template match="w:Directory[@Id='INSTALLDIR']">
-        <Directory>
+        <Directory Id="INSTALLDIR" xmlns="http://schemas.microsoft.com/wix/2006/wi">
             <xsl:apply-templates select="@* | *"/>
             <Directory Id="_1940f429_d8de_4676_b8ef_bed4120d3f8d" Name="bin">
                 <Component Id="_c47cd15d_ce53_4995_97f2_aea425846b5a" Guid="e83e893f-9495-4836-bf50-8e93c8685e6c" Win64="yes">
@@ -230,12 +230,13 @@
         </Directory>
     </xsl:template>
     <xsl:template match="w:Feature[@ConfigurableDirectory='INSTALLDIR']">
-        <Feature>
+        <Feature Id="jdk" xmlns="http://schemas.microsoft.com/wix/2006/wi">
             <xsl:apply-templates select="@* | *"/>
         </Feature>
         <Feature Id="openjfx" Absent="allow" AllowAdvertise="no" Level="${${PROJECT_NAME}_INSTALLER_FEATURE_LEVEL}" 
                 Title="${${PROJECT_NAME}_INSTALLER_FEATURE_TITLE}"
-                Description="${${PROJECT_NAME}_INSTALLER_FEATURE_DESCRIPTION}">
+                Description="${${PROJECT_NAME}_INSTALLER_FEATURE_DESCRIPTION}"
+                xmlns="http://schemas.microsoft.com/wix/2006/wi">
             <ComponentRef Id="_c47cd15d_ce53_4995_97f2_aea425846b5a"/>
             <ComponentRef Id="_153e322e_ee0b_4011_987f_5c0b1afd4eae"/>
             <ComponentRef Id="_1c02fb86_0597_49b5_ab6c_e68ab6fb39b5"/>
