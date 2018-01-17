@@ -18,8 +18,7 @@ cmake_minimum_required ( VERSION 2.8.12 )
 project ( openjfx NONE )
 
 # options
-set ( ${PROJECT_NAME}_UPDATE "152" CACHE STRING "Version string 'update' field" )
-set ( ${PROJECT_NAME}_BUILD "16" CACHE STRING "Version string 'build' field" )
+set ( ${PROJECT_NAME}_BUILD "12" CACHE STRING "Version string 'build' field" )
 set ( ${PROJECT_NAME}_OJFX_COMPILE_MEDIA "true" CACHE STRING "Enable 'media' module for OpenJFX" )
 set ( ${PROJECT_NAME}_OJFX_COMPILE_WEBKIT "true" CACHE STRING "Enable 'web' module for OpenJFX" )
 set ( ${PROJECT_NAME}_OJFX_JAVA_HOME ${CMAKE_CURRENT_BINARY_DIR}/../${openjdk_IMAGE} CACHE STRING "Path to jdk to use for building OpenJFX" )
@@ -29,7 +28,7 @@ set ( ${PROJECT_NAME}_INSTALLER_FEATURE_TITLE "OpenJFX Runtime" CACHE STRING "MS
 set ( ${PROJECT_NAME}_INSTALLER_FEATURE_DESCRIPTION "OpenJFX and WebKit runtime files." CACHE STRING "MSI Feature description for 'openjfx' component" )
 
 # image naming
-set ( ${PROJECT_NAME}_BASE openjfx-${openjdk_MAJOR_VERSION}.0.${${PROJECT_NAME}_UPDATE}-${openjdk_RPMBUILD}.b${${PROJECT_NAME}_BUILD}.${openjdk_MILESTONE}.windows )
+set ( ${PROJECT_NAME}_BASE openjfx-${openjdk_MAJOR_VERSION}.0.${openjdk_UPDATE}-${openjdk_RPMBUILD}.b${${PROJECT_NAME}_BUILD}.${openjdk_MILESTONE}.windows )
 set ( ${PROJECT_NAME}_IMAGE ${${PROJECT_NAME}_BASE}.${openjdk_ARCH} )
 
 # redist path
@@ -55,7 +54,7 @@ add_custom_target ( ${PROJECT_NAME}_build
         COMMAND cmd /c run-gradle.bat
         WORKING_DIRECTORY ${OJDKBUILD_DIR}/upstream/openjfx-8u
         COMMENT "Building OpenJFX ..." )
-add_dependencies ( ${PROJECT_NAME}_build image )        
+add_dependencies ( ${PROJECT_NAME}_build image )
 
 add_custom_target ( ${PROJECT_NAME}_image
         COMMAND if exist ${${PROJECT_NAME}_IMAGE} rd /s /q ${${PROJECT_NAME}_IMAGE}
