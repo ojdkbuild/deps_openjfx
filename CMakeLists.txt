@@ -66,7 +66,7 @@ add_custom_target ( ${PROJECT_NAME}_image
                 ${${PROJECT_NAME}_IMAGE}/jre/bin concrt140.dll msvcp140.dll vcruntime140.dll ${openjdk_RBCFLAGS} ) ${openjdk_RBCPOSTFIX}
         COMMAND ${CMAKE_COMMAND} -E remove ${${PROJECT_NAME}_IMAGE}/javafx-sdk-overlay.zip
         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-        COMMENT "Creating OpenJFX image, path: [${CMAKE_CURRENT_BINARY_DIR}/{${PROJECT_NAME}_IMAGE}] ..." )
+        COMMENT "Creating OpenJFX image, path: [${CMAKE_CURRENT_BINARY_DIR}/${${PROJECT_NAME}_IMAGE}] ..." )
 add_dependencies ( ${PROJECT_NAME}_image ${PROJECT_NAME}_build )
 
 add_custom_target ( ${PROJECT_NAME}_zip
