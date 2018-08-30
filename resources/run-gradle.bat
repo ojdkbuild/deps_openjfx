@@ -17,7 +17,7 @@ rem limitations under the License.
 @echo on
 
 rem env setup
-call "${OJDKBUILD_DIR}/resources/scripts/set-compile-env-vs15-${${PROJECT_NAME}_TOOLCHAIN_ARCH}.bat"
+call "${OJDKBUILD_DIR}/resources/scripts/set-compile-env-vs15-${${PROJECT_NAME}_TOOLCHAIN_ARCH}-openjfx.bat"
 set PATH=%PATH%;${OJDKBUILD_DIR}/tools/gradle18/bin
 
 rem freshly-built jdk
