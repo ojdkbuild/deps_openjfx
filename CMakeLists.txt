@@ -32,7 +32,7 @@ set ( ${PROJECT_NAME}_BASE openjfx-${openjdk_MAJOR_VERSION}.0.${openjdk_UPDATE}-
 set ( ${PROJECT_NAME}_IMAGE ${${PROJECT_NAME}_BASE}.${openjdk_ARCH} )
 
 # redist path
-if ( openjdk_32_BIT )
+if ( openjdk_ENABLE_32_BIT )
     set ( ${PROJECT_NAME}_TOOLCHAIN_ARCH "x86" CACHE INTERNAL "" )
     set ( ${PROJECT_NAME}_REDIST_ARCH "x86" CACHE INTERNAL "" )
 else ( )
