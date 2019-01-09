@@ -65,10 +65,6 @@ add_custom_target ( ${PROJECT_NAME}_image
         COMMAND (robocopy ${OJDKBUILD_DIR}/tools/toolchain/vs2017bt/VC/Redist/MSVC/14.12.25810/${${PROJECT_NAME}_REDIST_ARCH}/Microsoft.VC141.CRT
                 ${${PROJECT_NAME}_IMAGE}/jre/bin concrt140.dll msvcp140.dll vcruntime140.dll ${openjdk_RBCFLAGS} ) ${openjdk_RBCPOSTFIX}
         COMMAND ${CMAKE_COMMAND} -E remove ${${PROJECT_NAME}_IMAGE}/javafx-sdk-overlay.zip
-        # sign binaries
-        COMMAND ${${PROJECT_NAME}_OJFX_JAVA_HOME}/bin/jjs.exe ${openjdk_SIGNER_JVM_OPTS}
-                ${openjdk_INSTALLER_RESOURCES_PATH}/signer.js
-                ${CMAKE_CURRENT_BINARY_DIR}/${${PROJECT_NAME}_IMAGE}
         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
         COMMENT "Creating OpenJFX image, path: [${CMAKE_CURRENT_BINARY_DIR}/${${PROJECT_NAME}_IMAGE}] ..." )
 add_dependencies ( ${PROJECT_NAME}_image ${PROJECT_NAME}_build )
