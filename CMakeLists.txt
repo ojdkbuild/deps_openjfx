@@ -18,7 +18,7 @@ cmake_minimum_required ( VERSION 2.8.12 )
 project ( openjfx NONE )
 
 # options
-set ( ${PROJECT_NAME}_BUILD "12" CACHE STRING "Version string 'build' field" )
+set ( ${PROJECT_NAME}_BUILD "09" CACHE STRING "Version string 'build' field" )
 set ( ${PROJECT_NAME}_OJFX_COMPILE_MEDIA "true" CACHE STRING "Enable 'media' module for OpenJFX" )
 set ( ${PROJECT_NAME}_OJFX_COMPILE_WEBKIT "true" CACHE STRING "Enable 'web' module for OpenJFX" )
 set ( ${PROJECT_NAME}_OJFX_JAVA_HOME ${CMAKE_CURRENT_BINARY_DIR}/../${openjdk_IMAGE} CACHE STRING "Path to jdk to use for building OpenJFX" )
