@@ -29,7 +29,7 @@ set ( ${PROJECT_NAME}_INSTALLER_FEATURE_DESCRIPTION "OpenJFX and WebKit runtime 
 
 # image naming
 set ( ${PROJECT_NAME}_BASE openjfx-${openjdk_MAJOR_VERSION}.0.${openjdk_UPDATE}-${openjdk_RPMBUILD}.b${${PROJECT_NAME}_BUILD}.${openjdk_MILESTONE}.windows )
-set ( ${PROJECT_NAME}_IMAGE ${${PROJECT_NAME}_BASE}.${openjdk_ARCH} )
+set ( ${PROJECT_NAME}_IMAGE ${${PROJECT_NAME}_BASE}.${openjdk_ARCH} CACHE INTERNAL "" )
 
 # redist path
 if ( openjdk_ENABLE_32_BIT )
@@ -65,19 +65,18 @@ add_custom_target ( ${PROJECT_NAME}_image
         COMMAND (robocopy ${OJDKBUILD_DIR}/tools/toolchain/vs2017bt/VC/Redist/MSVC/14.12.25810/${${PROJECT_NAME}_REDIST_ARCH}/Microsoft.VC141.CRT
                 ${${PROJECT_NAME}_IMAGE}/jre/bin concrt140.dll msvcp140.dll vcruntime140.dll ${openjdk_RBCFLAGS} ) ${openjdk_RBCPOSTFIX}
         COMMAND ${CMAKE_COMMAND} -E remove ${${PROJECT_NAME}_IMAGE}/javafx-sdk-overlay.zip
+        DEPENDS ${PROJECT_NAME}_build
         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
         COMMENT "Creating OpenJFX image, path: [${CMAKE_CURRENT_BINARY_DIR}/${${PROJECT_NAME}_IMAGE}] ..." )
-add_dependencies ( ${PROJECT_NAME}_image ${PROJECT_NAME}_build )
 
 add_custom_target ( ${PROJECT_NAME}_zip
         COMMAND ${openjdk_TOOLS}/zip/zip.exe -qr${openjdk_COMPRESS_LEVEL} ${${PROJECT_NAME}_IMAGE}.zip ${${PROJECT_NAME}_IMAGE}
         COMMAND (robocopy ${CMAKE_CURRENT_BINARY_DIR} ${openjdk_DEST_DIR} ${${PROJECT_NAME}_IMAGE}.zip /mov ${openjdk_RBCFLAGS} ) ${openjdk_RBCPOSTFIX}
+        DEPENDS ${PROJECT_NAME}_image
         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
         COMMENT "Creating OpenJFX ZIP bundle ..." )
-add_dependencies ( ${PROJECT_NAME}_zip ${PROJECT_NAME}_image )
 
-add_custom_target ( ${PROJECT_NAME} )
-add_dependencies ( ${PROJECT_NAME} ${PROJECT_NAME}_zip )
+add_custom_target ( ${PROJECT_NAME} DEPENDS ${PROJECT_NAME}_zip )
 
 # installer
 configure_file ( ${CMAKE_CURRENT_LIST_DIR}/resources/installer.xsl
