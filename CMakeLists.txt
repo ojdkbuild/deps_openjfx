@@ -19,9 +19,10 @@ project ( openjfx NONE )
 
 # options
 set ( ${PROJECT_NAME}_BUILD "09" CACHE STRING "Version string 'build' field" )
-set ( ${PROJECT_NAME}_OJFX_COMPILE_MEDIA "true" CACHE STRING "Enable 'media' module for OpenJFX" )
-set ( ${PROJECT_NAME}_OJFX_COMPILE_WEBKIT "true" CACHE STRING "Enable 'web' module for OpenJFX" )
-set ( ${PROJECT_NAME}_OJFX_JAVA_HOME ${CMAKE_CURRENT_BINARY_DIR}/../${openjdk_IMAGE} CACHE STRING "Path to jdk to use for building OpenJFX" )
+set ( ${PROJECT_NAME}_COMPILE_MEDIA "true" CACHE STRING "Enable 'media' module for OpenJFX" )
+set ( ${PROJECT_NAME}_COMPILE_WEBKIT "true" CACHE STRING "Enable 'web' module for OpenJFX" )
+
+option ( ${PROJECT_NAME}_ENABLE_STANDALONE "Build JMC without building JDK" OFF )
 
 set ( ${PROJECT_NAME}_INSTALLER_FEATURE_LEVEL "2" CACHE STRING "MSI Feature 'Level' for 'openjfx' component" )
 set ( ${PROJECT_NAME}_INSTALLER_FEATURE_TITLE "OpenJFX Runtime" CACHE STRING "MSI Feature title for 'openjfx' component" )
@@ -49,10 +50,16 @@ configure_file ( ${CMAKE_CURRENT_LIST_DIR}/resources/run-gradle.bat
         ${OJDKBUILD_DIR}/upstream/openjfx-8u )
 
 # targets
+
+add_custom_target ( ${PROJECT_NAME}_buildjdk )
+if ( NOT ${PROJECT_NAME}_ENABLE_STANDALONE )
+    add_dependencies ( ${PROJECT_NAME}_buildjdk image )
+endif ( )
+
 add_custom_command ( OUTPUT ${OJDKBUILD_DIR}/upstream/openjfx-8u/build/bundles/javafx-sdk-overlay.zip
         COMMAND cmd /c run-gradle.bat
         WORKING_DIRECTORY ${OJDKBUILD_DIR}/upstream/openjfx-8u
-        DEPENDS image
+        DEPENDS ${PROJECT_NAME}_buildjdk
         COMMENT "Building OpenJFX ..." )
 
 add_custom_target ( ${PROJECT_NAME}_build DEPENDS ${OJDKBUILD_DIR}/upstream/openjfx-8u/build/bundles/javafx-sdk-overlay.zip )
