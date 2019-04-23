@@ -18,7 +18,8 @@ cmake_minimum_required ( VERSION 2.8.12 )
 project ( openjfx NONE )
 
 # options
-set ( ${PROJECT_NAME}_BUILD "09" CACHE STRING "Version string 'build' field" )
+set ( ${PROJECT_NAME}_UPDATE "202" CACHE STRING "Version string 'build' field" )
+set ( ${PROJECT_NAME}_BUILD "08" CACHE STRING "Version string 'build' field" )
 set ( ${PROJECT_NAME}_COMPILE_MEDIA "true" CACHE STRING "Enable 'media' module for OpenJFX" )
 set ( ${PROJECT_NAME}_COMPILE_WEBKIT "true" CACHE STRING "Enable 'web' module for OpenJFX" )
 
@@ -29,7 +30,7 @@ set ( ${PROJECT_NAME}_INSTALLER_FEATURE_TITLE "OpenJFX Runtime" CACHE STRING "MS
 set ( ${PROJECT_NAME}_INSTALLER_FEATURE_DESCRIPTION "OpenJFX and WebKit runtime files." CACHE STRING "MSI Feature description for 'openjfx' component" )
 
 # image naming
-set ( ${PROJECT_NAME}_BASE openjfx-${openjdk_MAJOR_VERSION}.0.${openjdk_UPDATE}-${openjdk_RPMBUILD}.b${${PROJECT_NAME}_BUILD}.${openjdk_MILESTONE}.windows )
+set ( ${PROJECT_NAME}_BASE openjfx-${openjdk_MAJOR_VERSION}.0.${${PROJECT_NAME}_UPDATE}-${openjdk_RPMBUILD}.b${${PROJECT_NAME}_BUILD}.${openjdk_MILESTONE}.windows )
 set ( ${PROJECT_NAME}_IMAGE ${${PROJECT_NAME}_BASE}.${openjdk_ARCH} CACHE INTERNAL "" )
 
 # redist path
@@ -69,8 +70,6 @@ add_custom_target ( ${PROJECT_NAME}_image
         COMMAND mkdir ${${PROJECT_NAME}_IMAGE}
         COMMAND (robocopy ${OJDKBUILD_DIR}/upstream/openjfx-8u/build/bundles ${${PROJECT_NAME}_IMAGE} javafx-sdk-overlay.zip ${openjdk_RBCFLAGS} ) ${openjdk_RBCPOSTFIX}
         COMMAND pushd ${${PROJECT_NAME}_IMAGE} && ${openjdk_TOOLS}/zip/unzip.exe -q javafx-sdk-overlay.zip && popd
-        COMMAND (robocopy ${OJDKBUILD_DIR}/tools/toolchain/vs2017bt/VC/Redist/MSVC/14.12.25810/${${PROJECT_NAME}_REDIST_ARCH}/Microsoft.VC141.CRT
-                ${${PROJECT_NAME}_IMAGE}/jre/bin concrt140.dll msvcp140.dll vcruntime140.dll ${openjdk_RBCFLAGS} ) ${openjdk_RBCPOSTFIX}
         COMMAND ${CMAKE_COMMAND} -E remove ${${PROJECT_NAME}_IMAGE}/javafx-sdk-overlay.zip
         DEPENDS ${PROJECT_NAME}_build
         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
