@@ -31,4 +31,5 @@ if exist "buildSrc/.gradle" exit /b 1
 cmd /c gradle cleanAll --refresh-dependencies --recompile-scripts --info || exit /b 1
 cmd /c gradle assemble --refresh-dependencies --info || exit /b 1
 cmd /c gradle test --refresh-dependencies || exit /b 1
+rem cmd /c gradle test -x :media:test -x :web:test --refresh-dependencies || exit /b 1
 cmd /c gradle zips -x :apps --refresh-dependencies --info || exit /b 1
