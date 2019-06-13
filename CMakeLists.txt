@@ -22,6 +22,7 @@ set ( ${PROJECT_NAME}_UPDATE "202" CACHE STRING "Version string 'build' field" )
 set ( ${PROJECT_NAME}_BUILD "08" CACHE STRING "Version string 'build' field" )
 set ( ${PROJECT_NAME}_COMPILE_MEDIA "true" CACHE STRING "Enable 'media' module for OpenJFX" )
 set ( ${PROJECT_NAME}_COMPILE_WEBKIT "true" CACHE STRING "Enable 'web' module for OpenJFX" )
+set ( ${PROJECT_NAME}_ENABLE_CLEANUP OFF CACHE BOOL "Delete temporary build files before creating the ZIP bundle" )
 
 option ( ${PROJECT_NAME}_ENABLE_STANDALONE "Build JMC without building JDK" OFF )
 
@@ -75,12 +76,23 @@ add_custom_target ( ${PROJECT_NAME}_image
         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
         COMMENT "Creating OpenJFX image, path: [${CMAKE_CURRENT_BINARY_DIR}/${${PROJECT_NAME}_IMAGE}] ..." )
 
+add_custom_target ( ${PROJECT_NAME}_image_cleanup
+        COMMAND rd /s /q build
+        DEPENDS ${PROJECT_NAME}_image
+        WORKING_DIRECTORY ${OJDKBUILD_DIR}/upstream/openjfx-8u/modules/web
+        COMMENT "Deleting temporary build artifacts ..." )
+
 add_custom_target ( ${PROJECT_NAME}_zip
         COMMAND ${openjdk_TOOLS}/zip/zip.exe -qr${openjdk_COMPRESS_LEVEL} ${${PROJECT_NAME}_IMAGE}.zip ${${PROJECT_NAME}_IMAGE}
         COMMAND (robocopy ${CMAKE_CURRENT_BINARY_DIR} ${openjdk_DEST_DIR} ${${PROJECT_NAME}_IMAGE}.zip /mov ${openjdk_RBCFLAGS} ) ${openjdk_RBCPOSTFIX}
-        DEPENDS ${PROJECT_NAME}_image
         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
         COMMENT "Creating OpenJFX ZIP bundle ..." )
+
+if ( ${PROJECT_NAME}_ENABLE_CLEANUP )
+    add_dependencies ( ${PROJECT_NAME}_zip ${PROJECT_NAME}_image_cleanup )
+else ( )
+    add_dependencies ( ${PROJECT_NAME}_zip ${PROJECT_NAME}_image )
+endif ( )
 
 add_custom_target ( ${PROJECT_NAME} DEPENDS ${PROJECT_NAME}_zip )
 
