@@ -83,8 +83,11 @@ add_custom_target ( ${PROJECT_NAME}_image_cleanup
         COMMENT "Deleting temporary build artifacts ..." )
 
 add_custom_target ( ${PROJECT_NAME}_zip
-        COMMAND ${openjdk_TOOLS}/zip/zip.exe -qr${openjdk_COMPRESS_LEVEL} ${${PROJECT_NAME}_IMAGE}.zip ${${PROJECT_NAME}_IMAGE}
+        COMMAND ${${PROJECT_NAME}_OJFX_JAVA_HOME}/bin/jrunscript.exe ${openjdk_JRUNSCRIPT_JVM_OPTS}
+                ${OJDKBUILD_DIR}/resources/js/zip.js ${openjdk_COMPRESS_LEVEL} ${${PROJECT_NAME}_IMAGE}
         COMMAND (robocopy ${CMAKE_CURRENT_BINARY_DIR} ${openjdk_DEST_DIR} ${${PROJECT_NAME}_IMAGE}.zip /mov ${openjdk_RBCFLAGS} ) ${openjdk_RBCPOSTFIX}
+        COMMAND ${${PROJECT_NAME}_OJFX_JAVA_HOME}/bin/jrunscript.exe ${${openjdk_JRUNSCRIPT_JVM_OPTS}
+                ${OJDKBUILD_DIR}/resources/js/sha256file.js ${${PROJECT_NAME}_DEST_DIR}/${${PROJECT_NAME}_IMAGE}.zip
         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
         COMMENT "Creating OpenJFX ZIP bundle ..." )
 

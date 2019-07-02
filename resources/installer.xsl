@@ -227,6 +227,9 @@
                     <File Id="_5a9be24b_e9ce_4fd1_9d29_0b5177231a37" Name="packager.jar" KeyPath="yes" DiskId="1" Source="openjfx/lib/packager.jar"/>
                 </Component>
             </Directory>
+            <Component Id="_e0c92af1_38c2_4b9c_9324_69a725d14c8f" Guid="319d9720-aa15-4b49-bf5a-6da2260dc7db" Win64="${openjdk_INSTALLER_WIN64_WIX}">
+                <File Id="_ab323198_6eb0_434b_9e69_616cef9efc2d" Name="javafx-src.zip" KeyPath="yes" DiskId="1" Source="openjfx/javafx-src.zip"/>
+            </Component>
         </Directory>
     </xsl:template>
     <xsl:template match="w:Feature[@ConfigurableDirectory='INSTALLDIR']">
@@ -301,6 +304,7 @@
             <ComponentRef Id="_09279d71_936e_47f9_9666_87b18b0468c1"/>
             <ComponentRef Id="_8ef24746_16f4_4142_81ff_d52bb5c71e8f"/>
             <ComponentRef Id="_150afed3_1e42_47b0_bf33_fe3100401af6"/>
+            <ComponentRef Id="_e0c92af1_38c2_4b9c_9324_69a725d14c8f"/>
         </Feature>
     </xsl:template>
 </xsl:stylesheet>
