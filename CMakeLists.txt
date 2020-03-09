@@ -70,7 +70,7 @@ add_custom_target ( ${PROJECT_NAME}_image
         COMMAND if exist ${${PROJECT_NAME}_IMAGE} rd /s /q ${${PROJECT_NAME}_IMAGE}
         COMMAND mkdir ${${PROJECT_NAME}_IMAGE}
         COMMAND (robocopy ${OJDKBUILD_DIR}/upstream/openjfx-8u/build/bundles ${${PROJECT_NAME}_IMAGE} javafx-sdk-overlay.zip ${openjdk_RBCFLAGS} ) ${openjdk_RBCPOSTFIX}
-        COMMAND pushd ${${PROJECT_NAME}_IMAGE} && ${openjdk_TOOLS}/zip/unzip.exe -q javafx-sdk-overlay.zip && popd
+        COMMAND cd ${${PROJECT_NAME}_IMAGE} && ${openjdk_TOOLS}/zip/unzip.exe -q javafx-sdk-overlay.zip
         COMMAND ${CMAKE_COMMAND} -E remove ${${PROJECT_NAME}_IMAGE}/javafx-sdk-overlay.zip
         DEPENDS ${PROJECT_NAME}_build
         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
