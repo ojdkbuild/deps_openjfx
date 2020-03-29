@@ -66,7 +66,6 @@ add_custom_target ( ${PROJECT_NAME}_jmc_cleanup_optional
         COMMAND cd deps && rd /s /q jmc-p2repo-local
         COMMAND cd deps && rd /s /q jmc-p2repo-photon
         COMMAND cd lookaside && rd /s /q java-1.8.0-openjdk
-        COMMAND cd tools && cd toolchain && rd /s /q sdk71
         COMMAND cd upstream && rd /s /q jmc
         WORKING_DIRECTORY ${OJDKBUILD_DIR}
         COMMENT "Deleting JMC files ..." )
