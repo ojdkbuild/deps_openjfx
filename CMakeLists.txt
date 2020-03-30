@@ -67,6 +67,7 @@ add_custom_target ( ${PROJECT_NAME}_jmc_cleanup_optional
         COMMAND cd deps && rd /s /q jmc-p2repo-photon
         COMMAND cd lookaside && rd /s /q java-1.8.0-openjdk
         COMMAND cd upstream && rd /s /q jmc
+        DEPENDS ${PROJECT_NAME}_buildjdk
         WORKING_DIRECTORY ${OJDKBUILD_DIR}
         COMMENT "Deleting JMC files ..." )
 
@@ -88,7 +89,7 @@ add_custom_target ( ${PROJECT_NAME}_image
         COMMAND if exist ${${PROJECT_NAME}_IMAGE} rd /s /q ${${PROJECT_NAME}_IMAGE}
         COMMAND mkdir ${${PROJECT_NAME}_IMAGE}
         COMMAND (robocopy ${OJDKBUILD_DIR}/upstream/openjfx-8u/build/bundles ${${PROJECT_NAME}_IMAGE} javafx-sdk-overlay.zip ${openjdk_RBCFLAGS} ) ${openjdk_RBCPOSTFIX}
-        COMMAND cd ${${PROJECT_NAME}_IMAGE} && ${openjdk_TOOLS}/zip/unzip.exe -q javafx-sdk-overlay.zip
+        COMMAND cd ${${PROJECT_NAME}_IMAGE} && ${OJDKBUILD_DIR}/tools/zip/unzip.exe -q javafx-sdk-overlay.zip
         COMMAND ${CMAKE_COMMAND} -E remove ${${PROJECT_NAME}_IMAGE}/javafx-sdk-overlay.zip
         DEPENDS ${PROJECT_NAME}_build
         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
