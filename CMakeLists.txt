@@ -96,7 +96,7 @@ add_custom_target ( ${PROJECT_NAME}_image
         COMMENT "Creating OpenJFX image, path: [${CMAKE_CURRENT_BINARY_DIR}/${${PROJECT_NAME}_IMAGE}] ..." )
 
 add_custom_target ( ${PROJECT_NAME}_image_cleanup
-        COMMAND cd upsream && rd /s /q openjfx-8u
+        COMMAND cd upstream && rd /s /q openjfx-8u
         DEPENDS ${PROJECT_NAME}_image
         WORKING_DIRECTORY ${OJDKBUILD_DIR}
         COMMENT "Deleting temporary build artifacts ..." )
