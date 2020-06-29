@@ -24,7 +24,7 @@ set ( ${PROJECT_NAME}_COMPILE_MEDIA "true" CACHE STRING "Enable 'media' module f
 set ( ${PROJECT_NAME}_COMPILE_WEBKIT "true" CACHE STRING "Enable 'web' module for OpenJFX" )
 set ( ${PROJECT_NAME}_ENABLE_CLEANUP OFF CACHE BOOL "Delete temporary build files before creating the ZIP bundle" )
 
-option ( ${PROJECT_NAME}_ENABLE_STANDALONE "Build JMC without building JDK" OFF )
+option ( ${PROJECT_NAME}_ENABLE_STANDALONE "Build OpenJFX without building JDK" OFF )
 
 set ( ${PROJECT_NAME}_INSTALLER_FEATURE_LEVEL "2" CACHE STRING "MSI Feature 'Level' for 'openjfx' component" )
 set ( ${PROJECT_NAME}_INSTALLER_FEATURE_TITLE "OpenJFX Runtime" CACHE STRING "MSI Feature title for 'openjfx' component" )
@@ -58,29 +58,10 @@ if ( NOT ${PROJECT_NAME}_ENABLE_STANDALONE )
     add_dependencies ( ${PROJECT_NAME}_buildjdk image )
 endif ( )
 
-# todo: moveme to jmc cmake script once enabled
-add_custom_target ( ${PROJECT_NAME}_jmc_cleanup_optional
-        COMMAND cd deps && rd /s /q jmc
-        COMMAND cd deps && rd /s /q jmc-mvnrepo
-        COMMAND cd deps && rd /s /q jmc-p2repo-babel-photon
-        COMMAND cd deps && rd /s /q jmc-p2repo-local
-        COMMAND cd deps && rd /s /q jmc-p2repo-photon
-        COMMAND cd lookaside && rd /s /q java-1.8.0-openjdk
-        COMMAND cd upstream && rd /s /q jmc
-        DEPENDS ${PROJECT_NAME}_buildjdk
-        WORKING_DIRECTORY ${OJDKBUILD_DIR}
-        COMMENT "Deleting JMC files ..." )
-
-add_custom_target ( ${PROJECT_NAME}_jmc_cleanup )
-
-if ( ${PROJECT_NAME}_ENABLE_CLEANUP )
-    add_dependencies ( ${PROJECT_NAME}_jmc_cleanup ${PROJECT_NAME}_jmc_cleanup_optional )
-endif ( )
-
 add_custom_command ( OUTPUT ${OJDKBUILD_DIR}/upstream/openjfx-8u/build/bundles/javafx-sdk-overlay.zip
         COMMAND cmd /c run-gradle.bat
         WORKING_DIRECTORY ${OJDKBUILD_DIR}/upstream/openjfx-8u
-        DEPENDS ${PROJECT_NAME}_buildjdk ${PROJECT_NAME}_jmc_cleanup
+        DEPENDS ${PROJECT_NAME}_buildjdk
         COMMENT "Building OpenJFX ..." )
 
 add_custom_target ( ${PROJECT_NAME}_build DEPENDS ${OJDKBUILD_DIR}/upstream/openjfx-8u/build/bundles/javafx-sdk-overlay.zip )
