@@ -19,7 +19,7 @@ project ( openjfx NONE )
 
 # options
 set ( ${PROJECT_NAME}_UPDATE "202" CACHE STRING "Version string 'build' field" )
-set ( ${PROJECT_NAME}_BUILD "17" CACHE STRING "Version string 'build' field" )
+set ( ${PROJECT_NAME}_BUILD "18" CACHE STRING "Version string 'build' field" )
 set ( ${PROJECT_NAME}_COMPILE_MEDIA "true" CACHE STRING "Enable 'media' module for OpenJFX" )
 set ( ${PROJECT_NAME}_COMPILE_WEBKIT "true" CACHE STRING "Enable 'web' module for OpenJFX" )
 set ( ${PROJECT_NAME}_ENABLE_CLEANUP OFF CACHE BOOL "Delete temporary build files before creating the ZIP bundle" )
